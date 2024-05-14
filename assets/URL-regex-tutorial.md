@@ -46,12 +46,12 @@ Don't worry if you don't understand how each criteria is being checked for yet! 
 
 - [Anchors](#anchors)
 - [Quantifiers](#quantifiers)
-- [OR Operator](#or-operator)
-- [Character Classes](#character-classes)
-- [Flags](#flags)
-- [Grouping and Capturing](#grouping-and-capturing)
-- [Bracket Expressions](#bracket-expressions)
 - [Greedy and Lazy Match](#greedy-and-lazy-match)
+- [Bracket Expressions](#bracket-expressions)
+- [Grouping and Capturing](#grouping-and-capturing)
+- [Character Classes](#character-classes)
+- [OR Operator](#or-operator)
+- [Flags](#flags)
 - [Boundaries](#boundaries)
 - [Back-references](#back-references)
 - [Look-ahead and Look-behind](#look-ahead-and-look-behind)
@@ -62,7 +62,7 @@ Don't worry if you don't understand how each criteria is being checked for yet! 
 
 Now let's dive in and take a closer look at the various componenets of a regex!
 
-### Anchors
+## Anchors
 
 Both the caret <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">^</span> and dollar-sign <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">$</span> symbols are considered to be <span style="font-weight:bold;">anchors</span>.
 
@@ -79,34 +79,60 @@ Lets refer back to the first and last parts of our URL matching example:
 const regex = /^(https?:\/\/)? ... \/?$/;
 ```
 
-FIrst, our regex checks if the string begins with whatever is within the parentheses <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">( )</span> (which separate it from the rest of the expression) directly following the caret <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">^</span> anchor. In our case it checks for an http or https protocol followed by a colon and two forward-slashes, either will match due to the question mark <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> <span style="font-weight:bold;">quantifier</span> symbol after the "s" in https. This section is also optional due the <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> quantifier outside the parentheses.
+FIrst, our regex checks if the string begins with whatever is within the parentheses <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">( )</span> (which separate it from the rest of the expression) directly following the caret <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">^</span> anchor. In our case it checks for an http or https protocol followed by a colon and two forward-slashes, either will match due to the question mark <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> <span style="font-weight:bold;">quantifier</span> symbol after the "s" in https. This group is also optional due the <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> quantifier outside the parentheses.
 
 In the last part of our expression, we are checking if the string ends in a trailing forward-slash, as those characters directly precede the dollar-sign <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">$</span> anchor. It is again optional due to the presence of the question mark <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> quantifier.
 
 Remember, in literal notation, if we want to check for a forward-slash it must be <span style="font-weight:bold;">escaped</span> with a back-slash each time. We'll talk about the question mark <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> and other quantifiers in the next section.
 
-### Quantifiers
+## Quantifiers
 
-### OR Operator
+You can think of <span style="font-weight:bold;">quantifiers</span> as rules that are placed on the individual groups in your expression, to set the limits on what will be considered a matching string. They are commonly used to set a group's character limit, or whether a group isn't required for a string to match. Let's take another look at our URL regex example:
 
-### Character Classes
+```JS
+const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+```
 
-### Flags
+In our expression, the <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span>, <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">+</span>, <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\*</span>, and <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">{ }</span> symbols are all <span style="font-weight:bold;">quantifiers</span>. Quantifiers are inherently <span style="font-weight:bold;">greedy</span>, which means they will attempt to match their specified pattern as many times as possible. Here's a break-down of each quantifier and its purpose:
 
-### Grouping and Capturing
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> - Matches the pattern zero or one time, a way to mark a group as optional.
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">+</span> - Matches the pattern one or more times, a way to allow for infinite matches.
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\*</span> - Matches the pattern zero or more times, a way to allow for infinite or no matches.
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">{ }</span> - Curly braces allow for three different ways to specify how a string should match:
+  - <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">{ n }</span> - Matches the pattern exactly <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"n"</span> number of times.
+  - <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">{ n, }</span> - Matches the pattern at least <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"n"</span> number of times.
+  - <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">{ n, x }</span> - Matches the pattern from a minimum of <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"n"</span> number of times to a maximum of <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"x"</span> number of times.
 
-### Bracket Expressions
+## Greedy and Lazy Match
 
-### Greedy and Lazy Match
+All quantifiers can be either <span style="font-weight:bold;">greedy</span> or <span style="font-weight:bold;">lazy</span>. In order to make any of the above quantifiers <span style="font-weight:bold;">lazy</span>, simply add the question mark <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> symbol after it, this will cause that quantifier to match as few occurrences as possible.
 
-### Boundaries
+Lets look at each part of our regex example again to see how it uses <span style="font-weight:bold;">quantifiers</span> as well as <span style="font-weight:bold;">greedy and lazy match</span>:
 
-### Back-references
+- The `(https?:\/\/)?` group uses <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> quantifiers to match a string beginning with http, https, or one that doesn't contain a protocol at all.
+- The `([\da-z\.-]+)` group uses a <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">+</span> quantifier to match a string that contains at least one domain name.
+- The `\.([a-z\.]{2,6})` group uses <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">{ }</span> quantifiers to match a string that contains a top-level domain between 2 and 6 characters long.
+- The `([\/\w \.-]*)` group uses a <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\*</span> quantifier to match a string that contains any number of paths, even zero.
+- The final `\/?$` group uses a <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> quantifier to match a string that may or may not contain a trailing forward-slash.
 
-### Look-ahead and Look-behind
+## Bracket Expressions
+
+## Grouping and Capturing
+
+## Character Classes
+
+## OR Operator
+
+## Flags
+
+## Boundaries
+
+## Back-references
+
+## Look-ahead and Look-behind
 
 ## Author
 
-Hi there! My name is Aster Oliva and I am, at the time of writing this, a student enrolled in a full-stack developer bootcamp through UC Berkeley. I am currently working towards a career in software/web development specializing in HTML/CSS, JavaScript & React/JSX. To see some of my other work, you can find me on GitHub at [github.com/Aoliva96](https://github.com/Aoliva96).
+Hi there! Thanks for taking a look at my tutorial. My name is Aster Oliva and I am, at the time of writing this, a student enrolled in a full-stack developer bootcamp through UC Berkeley. I am currently working towards a career in software/web development specializing in HTML/CSS and JavaScript, learning React/JSX, MongoDB and much more! To see some of my other work, you can find me on GitHub at [github.com/Aoliva96](https://github.com/Aoliva96).
 
 I hope you found my tutorial to be useful, and feel free to submit a comment if you have any improvements to suggest!
