@@ -22,7 +22,7 @@ In this tutorial, we'll be looking at an example of how <span style="font-weight
 const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 ```
 
-This <span style="font-weight:bold;">regex</span> search pattern will only return <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">true</span> if the compared string satisfies <span style="font-weight:bold;text-decoration:underline;">all</span> of the stated criteria. Lets do a quick breakdown on what, exactly, this expression is looking for:
+This <span style="font-weight:bold;">regex</span> search pattern will only return <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">true</span> if the compared string satisfies <span style="font-weight:bold;text-decoration:underline;">all</span> of the stated criteria. Let's do a quick breakdown on what, exactly, this expression is looking for:
 
 - <span style="font-weight:bold;">(Optional):</span> The string begins with either an <span style="font-weight:bold;">http</span> or <span style="font-weight:bold;">https</span> protocol, followed by a colon and two forward-slashes
 - <span style="font-weight:bold;">(Required):</span> The string has a domain name containing lowercase letters a-z, and at least one period or hyphen
@@ -48,8 +48,8 @@ Don't worry if you don't understand how each criteria is being checked for yet! 
 - [Quantifiers](#quantifiers)
 - [Greedy and Lazy Match](#greedy-and-lazy-match)
 - [Bracket Expressions](#bracket-expressions)
-- [Grouping and Capturing](#grouping-and-capturing)
 - [Character Classes](#character-classes)
+- [Grouping and Capturing](#grouping-and-capturing)
 - [OR Operator](#or-operator)
 - [Flags](#flags)
 - [Boundaries](#boundaries)
@@ -73,7 +73,7 @@ The caret <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;
 
 The dollar-sign <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">$</span> anchor symbol is used to end the regex pattern, specifying that the string should end with whatever characters directly precede it. The dollar-sign <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">$</span> anchor accepts either an exact string to match or a range of possible matches, same as the caret <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">^</span> anchor.
 
-Lets refer back to the first and last parts of our URL matching example:
+Let's refer back to the first and last parts of our URL matching example:
 
 ```JS
 const regex = /^(https?:\/\/)? ... \/?$/;
@@ -105,9 +105,9 @@ In our expression, the <span style="color:lightblue;background:#2b2b2b;padding:0
 
 ## Greedy and Lazy Match
 
-All quantifiers can be either <span style="font-weight:bold;">greedy</span> or <span style="font-weight:bold;">lazy</span>. In order to make any of the above quantifiers <span style="font-weight:bold;">lazy</span>, simply add the question mark <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> symbol after it, this will cause that quantifier to match as few occurrences as possible.
+All quantifiers can be either <span style="font-weight:bold;">greedy</span> or <span style="font-weight:bold;">lazy</span>, but are <span style="font-weight:bold;">greedy</span> by default. In order to make any of the above quantifiers <span style="font-weight:bold;">lazy</span>, simply add the question mark <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> symbol after it, this will cause that quantifier to match as few occurrences as possible instead of as many as possible.
 
-Lets look at each part of our regex example again to see how it uses <span style="font-weight:bold;">quantifiers</span> as well as <span style="font-weight:bold;">greedy and lazy match</span>:
+Let's look at each part of our regex example again to see how it uses <span style="font-weight:bold;">quantifiers</span> as well as <span style="font-weight:bold;">greedy and lazy match</span>:
 
 - The `(https?:\/\/)?` group uses <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> quantifiers to match a string beginning with http, https, or one that doesn't contain a protocol at all.
 - The `([\da-z\.-]+)` group uses a <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">+</span> quantifier to match a string that contains at least one domain name.
@@ -117,9 +117,74 @@ Lets look at each part of our regex example again to see how it uses <span style
 
 ## Bracket Expressions
 
-## Grouping and Capturing
+In a regular expression, anything inside a pair of square brackets <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">[ ]</span> is considered to be a <span style="font-weight:bold;">bracket expression</span>. Bracket expressions represent a range of characters in the string we wish to match. For this reason, bracket expressions are also sometimes known as <span style="font-weight:bold;">positive character groups</span> due to them defining anything what we want to <span style="font-weight:bold;">include</span>.
+
+As an example, we can write a bracket expression as <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">[ abc ]</span>, which will match a string that contains a lowercase <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"a"</span> or <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"b"</span> or <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"c"</span> regardless of the number of occurrences. In the case of this example, all of the following strings would match: <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"aaa"</span>, <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"cba"</span>, <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"bottle"</span>, <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"bobcat"</span> and <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"albacore"</span>.
+
+Most often, you'll see a hyphen <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">-</span> symbol used between either numbers or letters, this represents a range between the stated characters that will match anything it contains. For example, <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">[ a-z ]</span> is the exact same as writing the entire alphabet between square brackets.
+
+Let's look at our URL regex example again to see how <span style="font-weight:bold;">bracket expressions</span> are being used:
+
+```JS
+const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+```
+
+- In the `([\da-z\.-]+)` group, a string will match as long as it contains any digit 0-9 (specified by the <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\d</span> <span style="font-weight:bold;">character class</span>), and/or any lowercase letter from a-z, and/or a period or hyphen.
+- In the `([\/\w \.-]*)` group, a string will match as long as it contains any lowercase or uppercase letter a-z, a number 0-9, or an underscore <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\_</span> (specified by the <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\w</span> <span style="font-weight:bold;">character class</span>), and/or a period or hyphen.
+
+If desired, you can turn any bracket expression into a <span style="font-weight:bold;">negative character group</span> by adding the caret <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">^</span> symbol directly after the open-bracket. For example, the expression <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">[ ^0-9A-Z ]</span> would match any string that <span style="font-weight:bold;text-decoration:underline;">does not</span> contain numbers or uppercase letters.
+
+If you were wondering about those character classes from before, great news! Next up, we take a closer look at what classes can do.
 
 ## Character Classes
+
+In regex, a <span style="font-weight:bold;">character class</span> is a convenient shorthand for defining a set of characters to compare against a string. If that functionality sounds familiar, it may be because <span style="font-weight:bold;">bracket expressions</span> are also a form of character class, in addition to the <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\w</span> and <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\d</span> classes we saw within each expression. Here are some examples of common classes you might encounter while using regex:
+
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">.</span> - The "period" class, it matches any character except the newline character <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\n</span>.
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\d</span> - The "digit" class, it matches any Arabic numeral digit from 0-9.
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\w</span> - The "word" class, it matches any letter a-z regardless of case, any numeral digit 0-9, and underscores <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\_</span>.
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\s</span> - The "space" class, it matches a single whitespace character, including tabs and line breaks.
+
+In order to change the digit, word, or space classes to match their inverse value, you can capitalize the letter after the backslash. For example, the <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\D</span> class matches any character that is <span style="font-weight:bold;text-decoration:underline;">not</span> a digit from 0-9.
+
+Throughout this tutorial, you may have noticed that we have been referring to sections of the regex within parentheses <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">( )</span> as "groups". We'll get into why in the next section.
+
+## Grouping and Capturing
+
+In regex, <span style="font-weight:bold;">grouping constructs</span> are used to break out sections of the expression (known as <span style="font-weight:bold;">subexpressions</span> or <span style="font-weight:bold;">groups</span>) so that individual parts of a string can be compared to specific rules. The main way to group a section in a regex is by using a set of parentheses <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">( )</span> surrounding the part of the expression you wish to isolate.
+
+Let's take one last look at our entire URL regex example using everything we've learned so far, to see how grouping constructs have been used to separate the different sections:
+
+```JS
+const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+```
+
+- First, we see that the `^(https?:\/\/)?` subexpression is grouped so that we target only the protocol in the URL, ensuring everything within it either occurs first in the string, due to the caret <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">^</span> anchor symbol, or does not occur at all, due to the question mark <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?</span> quantifier symbol.
+- Next, we see that the `([\da-z\.-]+)` subexpression is grouped so that we target only the domain name in the URL, ensuring that there is at least one occurrence of a valid domain name, due to the plus-sign <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">+</span> quantifier symbol.
+- Next, we see that the `([a-z\.]{2,6})` subexpression is grouped so that we only target the top-level domain in the URL, ensuring that there is only one occurrence of a valid top-level domain (such as <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">.com</span> or <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">.org</span>), which is between 2-6 characters long.
+- Lastly, we see that the `([\/\w \.-]*)*` subexpression is grouped so that we only target the paths in the URL, ensuring that there can be any number of valid paths, due to the star <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">\*</span> quantifier symbol.
+
+But why should you use grouping constructs, and why are some parts of our regex outside the groups? A few reasons for that are:
+
+- Quantifiers attached to a subexpression apply their rules to the entire group.
+- Subexpressions are strict, they will look for a string that exactly matches their contents.
+- Grouping constructs improve regex readability, and provide more control over its functionality towards a specific section of a string.
+
+Grouping constructs also have two primary categories, <span style="font-weight:bold;">capturing</span> and <span style="font-weight:bold;">non-capturing</span>. This tutorial won't be going into detail about how the two categories differ, but the brief explanation is that <span style="font-weight:bold;">capturing</span> groups will capture the matched character sequences for possible re-use, while <span style="font-weight:bold;">non-capturing</span> groups do not. In order to make a grouping construct non-capturing, simply add the characters <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?:</span> at the beginning of an expression inside the parentheses.
+
+With grouping constructs covered, we have now fully explained each part of our regex example to check if a string is a valid URL! Take a moment to look over the full code block below and try to parse-out how each step is validating the provided URL string.
+
+```JS
+const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+const string = "https://github.com/Aoliva96/regex-tutorial";
+
+const isMatch = regex.test(string);
+console.log(isMatch); // Expected output: true
+```
+
+Hopefully, the functionality is a lot clearer now that you know how the whole expression is structured!
+
+There is of course, much more that can be done with regex. For the rest of this tutorial, we will briefly touch on some of the more common things you might see or utilize in other regular expressions.
 
 ## OR Operator
 
