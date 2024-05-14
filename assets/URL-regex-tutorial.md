@@ -52,9 +52,7 @@ Don't worry if you don't understand how each criteria is being checked for yet! 
 - [Grouping and Capturing](#grouping-and-capturing)
 - [OR Operator](#or-operator)
 - [Flags](#flags)
-- [Boundaries](#boundaries)
-- [Back-references](#back-references)
-- [Look-ahead and Look-behind](#look-ahead-and-look-behind)
+- [Resources](#resources)
 
 ## Regex Components
 
@@ -170,7 +168,7 @@ But why should you use grouping constructs, and why are some parts of our regex 
 - Subexpressions are strict, they will look for a string that exactly matches their contents.
 - Grouping constructs improve regex readability, and provide more control over its functionality towards a specific section of a string.
 
-Grouping constructs also have two primary categories, <span style="font-weight:bold;">capturing</span> and <span style="font-weight:bold;">non-capturing</span>. This tutorial won't be going into detail about how the two categories differ, but the brief explanation is that <span style="font-weight:bold;">capturing</span> groups will capture the matched character sequences for possible re-use, while <span style="font-weight:bold;">non-capturing</span> groups do not. In order to make a grouping construct non-capturing, simply add the characters <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?:</span> at the beginning of an expression inside the parentheses.
+Grouping constructs also have two primary categories, <span style="font-weight:bold;">capturing</span> and <span style="font-weight:bold;">non-capturing</span>. This tutorial won't be going into detail about how the two categories differ, but the brief explanation is that <span style="font-weight:bold;">capturing</span> groups will capture the matched character sequences for possible re-use, while <span style="font-weight:bold;">non-capturing</span> groups will not. In order to make a grouping construct non-capturing, simply add the characters <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">?:</span> at the beginning of an expression inside the parentheses.
 
 With grouping constructs covered, we have now fully explained each part of our regex example to check if a string is a valid URL! Take a moment to look over the full code block below and try to parse-out how each step is validating the provided URL string.
 
@@ -184,19 +182,59 @@ console.log(isMatch); // Expected output: true
 
 Hopefully, the functionality is a lot clearer now that you know how the whole expression is structured!
 
-There is of course, much more that can be done with regex. For the rest of this tutorial, we will briefly touch on some of the more common things you might see or utilize in other regular expressions.
+There is of course, much more that can be done with regex. For the rest of this tutorial, we will briefly touch on two other common regex categories you might encounter.
 
 ## OR Operator
 
+You may remember that bracket expressions do not require the matched string to meet all the stated requirements in the pattern. This means that the expression <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">[ \da-z_- ]</span> searches for alphanumeric characters <span style="font-weight:bold;text-decoration:underline;">or</span> underscores <span style="font-weight:bold;text-decoration:underline;">or</span> hyphens. You may end up wanting to use that same logic outside of a bracket expressions, within a grouping construct, or between two different subexpressions.
+
+Utilizing the <span style="font-weight:bold;">OR operator</span> <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">|</span> also known as a "pipe", the expression <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">[ abc ]</span> could be written as <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">( a | b | c )</span>. Lets look at the following expression as an example:
+
+```JS
+(abc):(xyz)
+```
+
+This would look for an exact match for <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">abc</span>, then a colon <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">:</span>, then an exact match for <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">xyz</span>. We can use the OR operator to convert it to the following expression:
+
+```JS
+(a|b|c):(x|y|z)
+```
+
+Now, the strings <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"abc:xyz"</span>, <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"acb:xyz"</span> and <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"a:z"</span> would all match, but <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">"xyz:abc"</span> would not.
+
 ## Flags
 
-## Boundaries
+At the very beginning of this tutorial, we started by explaining that a regular expression is considered to be a <span style="font-weight:bold;">literal</span>. As a literal, a regex must be escaped using a leading and trailing forward-slash to be correctly recognized by JavaScript. There is one exception to this rule, however, in the form of <span style="font-weight:bold;">flag components</span>. Flags are placed at the end of a regex, <span style="font-weight:bold;text-decoration:underline;">outside</span> of the wrapping forward-slashes. Flags define extra functionality or limitations of your regex, of which there are six optional flags that can be used in any combination. The following three flags are the ones you're most likely to see while working with regex:
 
-## Back-references
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">g</span> - Global search, this instructs the regex to test against all possible matches in a string.
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">i</span> - Case-insensitive search, this instructs the regex to ignore letter casing when attempting to match a string.
+- <span style="color:lightblue;background:#2b2b2b;padding:0 5px 2px 5px;border-radius:3px;">m</span> - Multi-line search, this instructs the regex to treat multi-line strings as multiple separate lines.
 
-## Look-ahead and Look-behind
+If we wanted to edit our URL regex example to utilize a case-insensitive search, it may look something like this:
 
-## Author
+```JS
+const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+```
+
+Not that different! But our regex will now accept URLs that contain capital letters wherever letters are expected.
+
+### Advanced Regex Categories
+
+There are a few notable regex categories that go beyond the scope of this tutorial. If you're interested in learning more, do explore the following:
+
+- Boundaries
+- Back-references
+- Look-ahead and Look-behind (lookaround assertions)
+
+## Resources
+
+Explore the following resources to expand your knowledge of regex:
+
+[MDN Web Docs | Regular Expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
+
+[W3Schools | The RegExp Object](https://www.w3schools.com/jsref/jsref_obj_regexp.asp)
+
+## About the Author
 
 Hi there! Thanks for taking a look at my tutorial. My name is Aster Oliva and I am, at the time of writing this, a student enrolled in a full-stack developer bootcamp through UC Berkeley. I am currently working towards a career in software/web development specializing in HTML/CSS and JavaScript, learning React/JSX, MongoDB and much more! To see some of my other work, you can find me on GitHub at [github.com/Aoliva96](https://github.com/Aoliva96).
 
